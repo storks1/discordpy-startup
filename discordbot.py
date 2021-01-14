@@ -1,6 +1,7 @@
 import discord
 import random
 import re
+import os
 token = os.environ['DISCORD_BOT_TOKEN']
 
 client = discord.Client()

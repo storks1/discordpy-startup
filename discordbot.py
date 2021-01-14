@@ -1,6 +1,4 @@
-from discord.ext import commands
-import os
-import traceback
+import discord
 import random
 import re
 
@@ -12,6 +10,8 @@ set = 0
 word = ("ばなな")
 end = ("たべたい")
 nu = 1
+run = 0
+stop = 0
 
 @client.event
 async def on_ready():
@@ -21,7 +21,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    global n,nu,word,end,set
+    global n,nu,word,end,set,run,stop
 
     if message.content.startswith("あたまのわるいひと") and client.user != message.author and set == 0:
         await message.channel.send('ばなな')
@@ -79,11 +79,26 @@ async def on_message(message):
         set = 0
 
     if message.content.startswith("連投開始") and client.user != message.author:
+        run = 1
         num = 0
         while num < nu:
             num += 1
             await message.channel.send(word)
         await message.channel.send(end)
+        run = 0
         print("連投終了")
-        
+        if stop ==1:
+            await message.channel.send('れんとうちゅーししたよー')
+            print("れんとうちゅーししたよー")
+            stop = 0
+
+    if message.content.startswith("連投中止") and client.user != message.author and set == 0 and run == 1:
+        nu = 0
+        stop = 1
+
+
+    if message.content.startswith("連投中止") and client.user != message.author and set == 0 and run == 0:
+        await message.channel.send("れんとうしてないよー")
+
+
 client.run(token)
